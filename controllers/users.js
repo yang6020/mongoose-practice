@@ -39,8 +39,6 @@ module.exports = {
 
     post: async (req, res, next) => {
       try {
-        console.log('hi');
-        console.log(req.value);
         const hashedPassword = await helpers.hash(req.value.body.password);
         if (hashedPassword) {
           const newUser = new User({
@@ -64,7 +62,8 @@ module.exports = {
   user: {
     getUser: async (req, res, next) => {
       try {
-        const { userId } = req.value.params;
+        const { userId } = req.params;
+        console.log(userId);
         const user = await User.findById(userId);
         res.status(200).json(user);
       } catch (err) {
@@ -76,8 +75,8 @@ module.exports = {
     replaceUser: async (req, res, next) => {
       try {
         const { userId } = req.value.params;
-        const newUser = req.body;
-        const result = await User.findOneAndUpdate(userId, newUser);
+        const newUser = req.value.body;
+        const result = await User.findByIdAndUpdate(userId, newUser);
         res.status(200).json(result);
       } catch (err) {
         let error = new Error('Cannot replace user, missing required fields');
@@ -88,8 +87,8 @@ module.exports = {
     updateUser: async (req, res, next) => {
       try {
         const { userId } = req.value.params;
-        const newUser = req.body;
-        const result = await User.findOneAndUpdate(userId, newUser);
+        const newUser = req.value.body;
+        const result = await User.findByIdAndUpdate(userId, newUser);
         res.status(200).json(result);
       } catch (err) {
         let error = new Error('Cannot replace user, missing required fields');
@@ -99,7 +98,7 @@ module.exports = {
     },
     getUserCars: async (req, res, next) => {
       try {
-        const { userId } = req.params;
+        const { userId } = req.value.params;
         const user = await User.findById(userId).populate('cars');
         res.status(200).json(user);
       } catch (err) {
@@ -112,8 +111,8 @@ module.exports = {
     },
     newUserCar: async (req, res, next) => {
       try {
-        const { userId } = req.params;
-        const newCar = new Car(req.body);
+        const { userId } = req.value.params;
+        const newCar = new Car(req.value.body);
         const user = await User.findById(userId);
         newCar.owner = user;
         // Save car

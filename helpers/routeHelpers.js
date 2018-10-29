@@ -36,6 +36,17 @@ module.exports = {
     };
   },
   schemas: {
+    carSchema: Joi.object().keys({
+      model: Joi.string().required(),
+      age: Joi.number().required(),
+      color: Joi.string().required(),
+    }),
+    userSchemaOptional: Joi.object().keys({
+      firstName: Joi.string().regex(/^[a-zA-Z]+$/),
+      lastName: Joi.string().regex(/^[a-zA-Z]+$/),
+      email: Joi.string().email(),
+      password: Joi.string(),
+    }),
     userSchema: Joi.object().keys({
       firstName: Joi.string()
         .regex(/^[a-zA-Z]+$/)
