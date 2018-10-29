@@ -22,10 +22,10 @@ module.exports = {
     return (req, res, next) => {
       const result = Joi.validate(req.body, schema);
       if (!result.error) {
-        if (!result.value) {
-          result.value = {};
+        if (!req.value) {
+          req.value = {};
         }
-        if (result.value['body']) {
+        if (req.value['body']) {
           req.value['body'] = {};
         }
         req.value['body'] = result.value;
@@ -38,14 +38,15 @@ module.exports = {
   schemas: {
     userSchema: Joi.object().keys({
       firstName: Joi.string()
-        .regex(/^[a-fA-F]+$/)
+        .regex(/^[a-zA-Z]+$/)
         .required(),
       lastName: Joi.string()
-        .regex(/^[a-fA-F]+$/)
+        .regex(/^[a-zA-Z]+$/)
         .required(),
       email: Joi.string()
         .email()
         .required(),
+      password: Joi.string().required(),
     }),
     idSchema: Joi.object().keys({
       param: Joi.string()

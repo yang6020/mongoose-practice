@@ -39,13 +39,15 @@ module.exports = {
 
     post: async (req, res, next) => {
       try {
-        const hashedPassword = await helpers.hash(req.body.password);
+        console.log('hi');
+        console.log(req.value);
+        const hashedPassword = await helpers.hash(req.value.body.password);
         if (hashedPassword) {
           const newUser = new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
+            firstName: req.value.body.firstName,
+            lastName: req.value.body.lastName,
             password: hashedPassword,
-            email: req.body.email,
+            email: req.value.body.email,
           });
           const user = await newUser.save();
           res.status(201).json(user);

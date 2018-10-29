@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/users');
-const { validateParam, schemas } = require('../helpers/routeHelpers');
+const {
+  validateParam,
+  validateBody,
+  schemas,
+} = require('../helpers/routeHelpers');
 
 router
   .route('/')
   .get(UserController.index.get)
-  .post(UserController.index.post);
+  .post(validateBody(schemas.userSchema), UserController.index.post);
 
 router
   .route('/:userId')
