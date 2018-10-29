@@ -1,10 +1,10 @@
 const express = require('express');
 const logger = require('morgan');
 const app = express();
+const cars = require('./routes/cars');
 const users = require('./routes/users');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
 mongoose.connect(
   'mongodb://localhost/car-practice',
   { useNewUrlParser: true },
@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(logger('dev'));
 
 app.use('/users', users);
+app.use('/cars', cars);
 
 // Catch 404s
 app.use((req, res, next) => {

@@ -36,6 +36,14 @@ module.exports = {
     };
   },
   schemas: {
+    newCarSchema: Joi.object().keys({
+      model: Joi.string().required(),
+      age: Joi.number().required(),
+      color: Joi.string().required(),
+      owner: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
+    }),
     carSchema: Joi.object().keys({
       model: Joi.string().required(),
       age: Joi.number().required(),
