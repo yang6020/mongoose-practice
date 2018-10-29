@@ -1,5 +1,6 @@
 const User = require('../models/users.js');
 const Car = require('../models/car');
+const helpers = require('../helpers/hash');
 
 // Callback Method
 // get: (req, res, next) => {
@@ -38,9 +39,20 @@ module.exports = {
 
     post: async (req, res, next) => {
       try {
-        const newUser = new User(req.body);
-        const user = await newUser.save();
-        res.status(201).json(user);
+        const hashedPassword = await helpers.hash(req.body.password);
+        if (hashedPassword) {
+          const newUser = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            password: hashedPassword,
+            email: req.body.email,
+          });
+          const user = await newUser.save();
+          res.status(201).json(user);
+        } else {
+          let error = new Error('Could not hash password');
+          next(error);
+        }
       } catch (err) {
         let error = new Error('Could not make user');
         next(error);
@@ -85,7 +97,7 @@ module.exports = {
     },
     getUserCars: async (req, res, next) => {
       try {
-        const { userId } = req.value.params;
+        const { userId } = req.params;
         const user = await User.findById(userId).populate('cars');
         res.status(200).json(user);
       } catch (err) {
@@ -98,7 +110,7 @@ module.exports = {
     },
     newUserCar: async (req, res, next) => {
       try {
-        const { userId } = req.value.params;
+        const { userId } = req.params;
         const newCar = new Car(req.body);
         const user = await User.findById(userId);
         newCar.owner = user;
@@ -110,8 +122,7 @@ module.exports = {
         await user.save();
         res.status(200).json(newCar);
       } catch (err) {
-        let error = new Error('Could not make car');
-        next(error);
+        next(err);
       }
     },
   },

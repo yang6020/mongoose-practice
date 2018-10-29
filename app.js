@@ -33,6 +33,8 @@ app.use((err, req, res, next) => {
   });
 });
 
+app.set('port', 3001);
+
 const port = app.get('port') || 3000;
 app.listen(port, () => {
   console.log('listening at port ' + port);
